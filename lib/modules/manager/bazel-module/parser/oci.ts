@@ -17,13 +17,16 @@ export const RuleToDockerPackageDep = RecordFragmentSchema.extend({
     digest: StringFragmentSchema.optional(),
   }),
 }).transform(
-  ({ children: { rule, name, image, tag, digest } }): PackageDependency => ({
+  ({ value, children: { rule, name, image, tag, digest } }): PackageDependency => ({
     datasource: DockerDatasource.id,
     depType: rule.value,
     depName: name.value,
     packageName: image.value,
     currentValue: tag?.value,
     currentDigest: digest?.value,
+    // TODO: Gather the full record string from the parser so we can pass it as replaceString.
+    // Essentially copy the context management from the bazel parser.
+    replaceString: value,
   }),
 );
 
