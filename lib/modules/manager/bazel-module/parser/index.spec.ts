@@ -24,17 +24,17 @@ describe('modules/manager/bazel-module/parser/index', () => {
         fragments.rule(
           'bazel_dep',
           {
-            name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
+            name: 'rules_foo',
+            version: '1.2.3',
           },
           true,
         ),
         fragments.rule(
           'bazel_dep',
           {
-            name: fragments.string('rules_bar'),
-            version: fragments.string('1.0.0'),
-            dev_dependency: fragments.boolean(true),
+            name: 'rules_bar',
+            version: '1.0.0',
+            dev_dependency: true,
           },
           true,
         ),
@@ -57,25 +57,18 @@ describe('modules/manager/bazel-module/parser/index', () => {
         fragments.rule(
           'bazel_dep',
           {
-            name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
+            name: 'rules_foo',
+            version: '1.2.3',
           },
           true,
         ),
         fragments.rule(
           'git_override',
           {
-            module_name: fragments.string('rules_foo'),
-            patches: fragments.array(
-              [fragments.string('//:rules_foo.patch')],
-              true,
-            ),
-            commit: fragments.string(
-              '6a2c2e22849b3e6b33d5ea9aa72222d4803a986a',
-            ),
-            remote: fragments.string(
-              'https://github.com/example/rules_foo.git',
-            ),
+            module_name: 'rules_foo',
+            patches: ['//:rules_foo.patch'],
+            commit: '6a2c2e22849b3e6b33d5ea9aa72222d4803a986a',
+            remote: 'https://github.com/example/rules_foo.git',
           },
           true,
         ),
@@ -97,19 +90,16 @@ describe('modules/manager/bazel-module/parser/index', () => {
         fragments.rule(
           'bazel_dep',
           {
-            name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
+            name: 'rules_foo',
+            version: '1.2.3',
           },
           true,
         ),
         fragments.rule(
           'archive_override',
           {
-            module_name: fragments.string('rules_foo'),
-            urls: fragments.array(
-              [fragments.string('https://example.com/archive.tar.gz')],
-              true,
-            ),
+            module_name: 'rules_foo',
+            urls: ['https://example.com/archive.tar.gz'],
           },
           true,
         ),
@@ -129,16 +119,16 @@ describe('modules/manager/bazel-module/parser/index', () => {
         fragments.rule(
           'bazel_dep',
           {
-            name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
+            name: 'rules_foo',
+            version: '1.2.3',
           },
           true,
         ),
         fragments.rule(
           'local_path_override',
           {
-            module_name: fragments.string('rules_foo'),
-            urls: fragments.string('/path/to/repo'),
+            module_name: 'rules_foo',
+            urls: '/path/to/repo',
           },
           true,
         ),
@@ -159,17 +149,17 @@ describe('modules/manager/bazel-module/parser/index', () => {
         fragments.rule(
           'bazel_dep',
           {
-            name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
+            name: 'rules_foo',
+            version: '1.2.3',
           },
           true,
         ),
         fragments.rule(
           'single_version_override',
           {
-            module_name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
-            registry: fragments.string('https://example.com/custom_registry'),
+            module_name: 'rules_foo',
+            version: '1.2.3',
+            registry: 'https://example.com/custom_registry',
           },
           true,
         ),
@@ -198,19 +188,10 @@ describe('modules/manager/bazel-module/parser/index', () => {
           'maven',
           'artifact',
           {
-            group: fragments.string('org.clojure'),
-            artifact: fragments.string('core.specs.alpha'),
-            version: fragments.string('0.2.56'),
-            exclusions: fragments.array(
-              [
-                {
-                  type: 'string',
-                  value: 'org.clojure:clojure',
-                  isComplete: true,
-                },
-              ],
-              true,
-            ),
+            group: 'org.clojure',
+            artifact: 'core.specs.alpha',
+            version: '0.2.56',
+            exclusions: ['org.clojure:clojure'],
           },
           true,
         ),
@@ -219,9 +200,9 @@ describe('modules/manager/bazel-module/parser/index', () => {
           'maven_1',
           'artifact',
           {
-            group: fragments.string('org.clojure1'),
-            artifact: fragments.string('core.specs.alpha1'),
-            version: fragments.string('0.2.561'),
+            group: 'org.clojure1',
+            artifact: 'core.specs.alpha1',
+            version: '0.2.561',
           },
           true,
         ),
@@ -253,31 +234,11 @@ describe('modules/manager/bazel-module/parser/index', () => {
           'maven',
           'install',
           {
-            artifacts: fragments.array(
-              [
-                {
-                  type: 'string',
-                  value: 'junit:junit:4.13.2',
-                  isComplete: true,
-                },
-                {
-                  type: 'string',
-                  value: 'com.google.guava:guava:31.1-jre',
-                  isComplete: true,
-                },
-              ],
-              true,
-            ),
-            repositories: fragments.array(
-              [
-                {
-                  type: 'string',
-                  value: 'https://repo1.maven.org/maven2/',
-                  isComplete: true,
-                },
-              ],
-              true,
-            ),
+            artifacts: [
+              'junit:junit:4.13.2',
+              'com.google.guava:guava:31.1-jre',
+            ],
+            repositories: ['https://repo1.maven.org/maven2/'],
           },
           true,
         ),
@@ -286,9 +247,9 @@ describe('modules/manager/bazel-module/parser/index', () => {
           'maven',
           'artifact',
           {
-            group: fragments.string('org.clojure'),
-            artifact: fragments.string('core.specs.alpha'),
-            version: fragments.string('0.2.56'),
+            group: 'org.clojure',
+            artifact: 'core.specs.alpha',
+            version: '0.2.56',
           },
           true,
         ),
@@ -313,13 +274,12 @@ describe('modules/manager/bazel-module/parser/index', () => {
           'oci',
           'pull',
           {
-            name: fragments.string('nginx_image'),
-            digest: fragments.string(
+            name: 'nginx_image',
+            digest:
               'sha256:287ff321f9e3cde74b600cc26197424404157a72043226cbbf07ee8304a2c720',
-            ),
-            image: fragments.string('index.docker.io/library/nginx'),
-            platforms: fragments.array([fragments.string('linux/amd64')], true),
-            tag: fragments.string('1.27.1'),
+            image: 'index.docker.io/library/nginx',
+            platforms: ['linux/amd64'],
+            tag: '1.27.1',
           },
           true,
         ),
@@ -341,17 +301,10 @@ describe('modules/manager/bazel-module/parser/index', () => {
         fragments.rule(
           'git_repository',
           {
-            name: fragments.string('rules_foo'),
-            patches: fragments.array(
-              [fragments.string('//:rules_foo.patch')],
-              true,
-            ),
-            commit: fragments.string(
-              '6a2c2e22849b3e6b33d5ea9aa72222d4803a986a',
-            ),
-            remote: fragments.string(
-              'https://github.com/example/rules_foo.git',
-            ),
+            name: 'rules_foo',
+            patches: ['//:rules_foo.patch'],
+            commit: '6a2c2e22849b3e6b33d5ea9aa72222d4803a986a',
+            remote: 'https://github.com/example/rules_foo.git',
           },
           true,
         ),

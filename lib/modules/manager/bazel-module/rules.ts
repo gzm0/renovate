@@ -8,7 +8,7 @@ import { regEx } from '../../../util/regex';
 import { BazelDatasource } from '../../datasource/bazel';
 import { GithubTagsDatasource } from '../../datasource/github-tags';
 import type { PackageDependency } from '../types';
-import { RuleFragmentSchema, StringFragmentSchema } from './parser/fragments';
+import { RuleFragmentSchema } from './parser/fragments';
 
 // Rule Schemas
 
@@ -66,8 +66,8 @@ export function bazelModulePackageDepToPackageDependency(
 const BazelDepToPackageDep = RuleFragmentSchema.extend({
   rule: z.literal('bazel_dep'),
   children: z.object({
-    name: StringFragmentSchema,
-    version: StringFragmentSchema.optional(),
+    name: z.string(),
+    version: z.string().optional(),
   }),
 }).transform(
   ({ rule, children: { name, version } }): BasePackageDep => ({
@@ -82,9 +82,9 @@ const BazelDepToPackageDep = RuleFragmentSchema.extend({
 const GitOverrideToPackageDep = RuleFragmentSchema.extend({
   rule: z.literal('git_override'),
   children: z.object({
-    module_name: StringFragmentSchema,
-    remote: StringFragmentSchema,
-    commit: StringFragmentSchema,
+    module_name: z.string(),
+    remote: z.string(),
+    commit: z.string(),
   }),
 }).transform(
   ({
@@ -111,9 +111,9 @@ const GitOverrideToPackageDep = RuleFragmentSchema.extend({
 const SingleVersionOverrideToPackageDep = RuleFragmentSchema.extend({
   rule: z.literal('single_version_override'),
   children: z.object({
-    module_name: StringFragmentSchema,
-    version: StringFragmentSchema.optional(),
-    registry: StringFragmentSchema.optional(),
+    module_name: z.string(),
+    version: z.string().optional(),
+    registry: z.string().optional(),
   }),
 }).transform(
   ({
@@ -144,7 +144,7 @@ const SingleVersionOverrideToPackageDep = RuleFragmentSchema.extend({
 const UnsupportedOverrideToPackageDep = RuleFragmentSchema.extend({
   rule: z.enum(['archive_override', 'local_path_override']),
   children: z.object({
-    module_name: StringFragmentSchema,
+    module_name: z.string(),
   }),
 }).transform(
   ({ rule, children: { module_name: moduleName } }): OverridePackageDep => {
@@ -241,9 +241,9 @@ export function toPackageDependencies(
 export const GitRepositoryToPackageDep = RuleFragmentSchema.extend({
   rule: z.literal('git_repository'),
   children: z.object({
-    name: StringFragmentSchema,
-    remote: StringFragmentSchema,
-    commit: StringFragmentSchema,
+    name: z.string(),
+    remote: z.string(),
+    commit: z.string(),
   }),
 }).transform(({ rule, children: { name, remote, commit } }): BasePackageDep => {
   const gitRepo: BasePackageDep = {

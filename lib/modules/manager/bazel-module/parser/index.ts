@@ -1,6 +1,6 @@
 import { lang, query as q } from 'good-enough-parser';
 import { Ctx } from './context';
-import type { ResultFragment } from './fragments';
+import type { Result } from './result';
 import { extensionTags } from './extension-tags';
 import { rules } from './rules';
 
@@ -14,7 +14,7 @@ const query = q.tree<Ctx>({
 
 const starlarkLang = lang.createLang('starlark');
 
-export function parse(input: string): ResultFragment[] {
+export function parse(input: string): Result[] {
   const parsedResult = starlarkLang.query(input, query, new Ctx());
   return parsedResult?.results ?? [];
 }

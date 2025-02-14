@@ -3,14 +3,15 @@ import type {
   ArrayFragment,
   ExtensionTagFragment,
   PreparedExtensionTagFragment,
-  ResultFragment,
   RuleFragment,
 } from './fragments';
 import * as fragments from './fragments';
+import * as starlark from './starlark';
+import { Result } from './result';
 
 // Represents the fields that the context must have.
 export interface CtxCompatible {
-  results: ResultFragment[];
+  results: Result[];
   stack: AllFragments[];
 }
 
@@ -29,7 +30,7 @@ export class CtxProcessingError extends Error {
 }
 
 export class Ctx implements CtxCompatible {
-  results: ResultFragment[];
+  results: Result[];
   stack: AllFragments[];
 
   constructor() {
@@ -98,13 +99,16 @@ export class Ctx implements CtxCompatible {
     const parent = this.safeCurrent;
 
     if (parent) {
-      if (parent.type === 'attribute' && fragments.isValue(current)) {
-        parent.value = current;
+      if (
+        parent.type === 'attribute' &&
+        (current.type === 'primitive' || current.type === 'array')
+      ) {
+        parent.value = current.value;
         parent.isComplete = true;
         return true;
       }
-      if (parent.type === 'array' && fragments.isPrimitive(current)) {
-        parent.items.push(current);
+      if (parent.type === 'array' && current.type === 'primitive') {
+        parent.value.push(current.value);
         return true;
       }
       if (
@@ -131,12 +135,14 @@ export class Ctx implements CtxCompatible {
   }
 
   addString(value: string): Ctx {
-    this.stack.push(fragments.string(value));
+    this.stack.push(fragments.primitive(value));
     return this.processStack();
   }
 
-  addBoolean(value: string | boolean): Ctx {
-    this.stack.push(fragments.boolean(value));
+  addBoolean(rawValue: boolean | string): Ctx {
+    const value =
+      typeof rawValue === 'string' ? starlark.asBoolean(rawValue) : rawValue;
+    this.stack.push(fragments.primitive(value));
     return this.processStack();
   }
 

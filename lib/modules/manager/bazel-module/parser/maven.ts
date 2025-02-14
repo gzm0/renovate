@@ -30,10 +30,10 @@ type ArtifactSpec = z.infer<typeof ArtifactSpec>;
 const MavenArtifactTarget = ExtensionTagFragmentSchema.extend({
   extension: z.literal(mavenExtensionPrefix),
   tag: z.literal(artifactTag),
-  children: z.object({
-    artifact: StringFragmentSchema,
-    group: StringFragmentSchema,
-    version: StringFragmentSchema,
+  attributes: z.object({
+    artifact: z.string(),
+    group: z.string(),
+    version: z.string(),
   }),
 }).transform(
   ({ children: { artifact, group, version } }): PackageDependency[] => [
@@ -50,8 +50,8 @@ const MavenArtifactTarget = ExtensionTagFragmentSchema.extend({
 const MavenInstallTarget = ExtensionTagFragmentSchema.extend({
   extension: z.literal(mavenExtensionPrefix),
   tag: z.literal(installTag),
-  children: z.object({
-    artifacts: StringArrayFragmentSchema.transform((artifacts) => {
+  attributes: z.object({
+    artifacts: z.array(z.string()).transform((artifacts) => {
       const result: ArtifactSpec[] = [];
       for (const { value } of artifacts.items) {
         const [group, artifact, version] = value.split(':');
@@ -62,7 +62,7 @@ const MavenInstallTarget = ExtensionTagFragmentSchema.extend({
 
       return result;
     }),
-    repositories: StringArrayFragmentSchema,
+    repositories: z.array(z.string()),
   }),
 }).transform(({ children: { artifacts, repositories } }): PackageDependency[] =>
   artifacts.map(({ group, artifact, version: currentValue }) => ({

@@ -4,7 +4,7 @@ import { isNotNullOrUndefined } from '../../../util/array';
 import { LooseArray } from '../../../util/schema-utils';
 import type { PackageDependency, PackageFileContent } from '../types';
 import * as bazelrc from './bazelrc';
-import type { ResultFragment } from './parser/fragments';
+import type { Result } from './parser/result';
 import { parse } from './parser';
 import { RuleToMavenPackageDep, fillRegistryUrls } from './parser/maven';
 import { RuleToDockerPackageDep } from './parser/oci';
@@ -45,7 +45,7 @@ export async function extractPackageFile(
 }
 
 async function extractBazelPfc(
-  records: ResultFragment[],
+  records: Result[],
   packageFile: string,
 ): Promise<PackageFileContent> {
   const pfc: PackageFileContent = LooseArray(RuleToBazelModulePackageDep)
@@ -65,13 +65,11 @@ async function extractBazelPfc(
   return pfc;
 }
 
-function extractGitRepositoryDeps(
-  records: ResultFragment[],
-): PackageDependency[] {
+function extractGitRepositoryDeps(records: Result[]): PackageDependency[] {
   return LooseArray(GitRepositoryToPackageDep).parse(records);
 }
 
-function extractMavenDeps(records: ResultFragment[]): PackageDependency[] {
+function extractMavenDeps(records: Result[]): PackageDependency[] {
   return LooseArray(RuleToMavenPackageDep)
     .transform(fillRegistryUrls)
     .parse(records);

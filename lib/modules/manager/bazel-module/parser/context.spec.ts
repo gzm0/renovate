@@ -3,98 +3,6 @@ import * as fragments from './fragments';
 
 describe('modules/manager/bazel-module/context', () => {
   describe('Ctx', () => {
-    it('construct simple bazel_dep', () => {
-      const ctx = new Ctx()
-        .startRule('bazel_dep')
-        .startAttribute('name')
-        .addString('rules_foo')
-        .startAttribute('version')
-        .addString('1.2.3')
-        .endRule();
-
-      expect(ctx.results).toEqual([
-        fragments.rule(
-          'bazel_dep',
-          {
-            name: fragments.string('rules_foo'),
-            version: fragments.string('1.2.3'),
-          },
-          true,
-        ),
-      ]);
-    });
-
-    it('construct simple bazel_dep with no version', () => {
-      const ctx = new Ctx()
-        .startRule('bazel_dep')
-        .startAttribute('name')
-        .addString('rules_foo')
-        .endRule();
-
-      expect(ctx.results).toEqual([
-        fragments.rule(
-          'bazel_dep',
-          {
-            name: fragments.string('rules_foo'),
-          },
-          true,
-        ),
-      ]);
-    });
-
-    it('construct a rule with array arg', () => {
-      const ctx = new Ctx()
-        .startRule('foo_library')
-        .startAttribute('name')
-        .addString('my_library')
-        .startAttribute('srcs')
-        .startArray()
-        .addString('first')
-        .addString('second')
-        .endArray()
-        .endRule();
-
-      expect(ctx.results).toEqual([
-        fragments.rule(
-          'foo_library',
-          {
-            name: fragments.string('my_library'),
-            srcs: fragments.array(
-              [fragments.string('first'), fragments.string('second')],
-              true,
-            ),
-          },
-          true,
-        ),
-      ]);
-    });
-
-    it('construct an extension tag', () => {
-      const ctx = new Ctx()
-        .prepareExtensionTag('maven', 'maven_01')
-        .startExtensionTag('install')
-        .startAttribute('artifacts')
-        .startArray()
-        .addString('org.example:my-lib:1.0.0')
-        .endArray()
-        .endExtensionTag();
-
-      expect(ctx.results).toEqual([
-        fragments.extensionTag(
-          'maven',
-          'maven_01',
-          'install',
-          {
-            artifacts: fragments.array(
-              [fragments.string('org.example:my-lib:1.0.0')],
-              true,
-            ),
-          },
-          true,
-        ),
-      ]);
-    });
-
     describe('extension tag failure cases', () => {
       it('throws if there is no current', () => {
         expect(() => new Ctx().startExtensionTag('install')).toThrow(
@@ -144,7 +52,7 @@ describe('modules/manager/bazel-module/context', () => {
       const ctx = new Ctx().startAttribute('name');
       expect(() => ctx.addString('chicken')).toThrow(
         new CtxProcessingError(
-          fragments.attribute('name', fragments.string('chicken')),
+          fragments.attribute('name', fragments.primitive('chicken')),
         ),
       );
     });
